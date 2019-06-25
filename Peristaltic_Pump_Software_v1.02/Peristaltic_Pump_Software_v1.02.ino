@@ -318,7 +318,7 @@ if (in_action){
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
       dose_start = millis();                // time when USB dosing starts (millisecs)
-        Serial.print("dose,");          // and print to terminal in format:
+        Serial.print("dose,");              // and print to terminal in format:
         Serial.print(vol_uL);               // dosing,[volume],[rate],[start_millis],[stop_millis]
         Serial.print(",");
         Serial.print(rate_uL_min);
