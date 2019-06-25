@@ -346,7 +346,7 @@ if (in_action){
       if (dose(steps, delay_us, step_counter)){
         usb_start = false;
         disp_end = millis();
-          Serial.println(disp_end - disp_start);
+          Serial.println(disp_end);
       }
     } else if (inChar == 'c'){
       if (dose(CALIBR_STEPS, CALIBR_DELAY_US, step_counter)){
