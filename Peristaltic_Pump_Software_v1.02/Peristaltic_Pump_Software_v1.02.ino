@@ -344,14 +344,14 @@ if (in_action){
       usb_start=false;
     } else if (inChar == 'x'){
       usb_start=false;
+      pump_end = millis();
+        Serial.println(pump_end);
     }
   }
   
   if (usb_start) {
     if(inChar == 'p'){
       pump(delay_us);      
-      pump_end = millis();
-        Serial.println(pump_end);
     } else if (inChar == 'd') {
       if (dose(steps, delay_us, step_counter)){
         usb_start = false;
