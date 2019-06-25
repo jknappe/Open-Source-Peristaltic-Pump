@@ -48,6 +48,7 @@ long rate_uL_min =0;
 int cal=0;
 boolean usb_start=0;
 char inChar;
+int usb_state = 0;      // state of USB command: 0=idle, 1=pump, 2=dose, 3=calibrate
 long dose_start = 0;    // stores time when USB dosing starts (millisecs)
 long dose_end = 0;      // stores time when USB dosing stops (millisecs)
 long pump_start = 0;    // stores time when USB pumping starts (millisecs)
@@ -309,6 +310,7 @@ if (in_action){
       }
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
+      usb_state = 1;                        // set USB state to "pump"
       pump_start = millis();                // time when USB pumping starts (millisecs)
         Serial.print("pump,");              // and print to terminal in format:
         Serial.print("NA");                 // pump,NA,[rate],[cal],[start_millis],[stop_millis]
@@ -329,6 +331,7 @@ if (in_action){
       steps = steps_calc(vol_uL, 1, cal, 0);
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
+      usb_state = 2;                        // set USB state to "dose"
       dose_start = millis();                // time when USB dosing starts (millisecs)
         Serial.print("dose,");              // and print to terminal in format:
         Serial.print(vol_uL);               // dose,[volume],[rate],[cal],[start_millis],[stop_millis]
@@ -341,6 +344,7 @@ if (in_action){
         Serial.print(",");
     } else if (inChar == 'c'){
       usb_start=true;
+      usb_state = 3;                        // set USB state to "calibrate"
     } else if (inChar == 'w'){
       cal=Serial.parseInt();
       menu[7].value =cal;
@@ -350,8 +354,11 @@ if (in_action){
       usb_start=false;
     } else if (inChar == 'x'){
       usb_start=false;
-      pump_end = millis();
+      if (usb_state == 1) {                 // if pumping via USB command and "x" is received
+        pump_end = millis();                // write end time (millisecs) to terminal
         Serial.println(pump_end);
+        }
+      usb_state = 0;                        // set USB state to "idle"      
     }
   }
   
@@ -361,6 +368,7 @@ if (in_action){
     } else if (inChar == 'd') {
       if (dose(steps, delay_us, step_counter)){
         usb_start = false;
+        usb_state = 0;                      // set USB state to "idle"  
         dose_end = millis();
           Serial.println(dose_end);
       }
