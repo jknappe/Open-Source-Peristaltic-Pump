@@ -48,8 +48,8 @@ long rate_uL_min =0;
 int cal=0;
 boolean usb_start=0;
 char inChar;
-long disp_start = 0;    // stores time when USB dispensing starts (millisecs)
-long disp_end = 0;      // stores time when USB dispensing stops (millisecs)
+long dose_start = 0;    // stores time when USB dosing starts (millisecs)
+long dose_end = 0;      // stores time when USB dosing stops (millisecs)
 
 //STATE ------------------------------------------------------------------------------------
 boolean in_menu=0;
@@ -307,14 +307,6 @@ if (in_action){
       }
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
-      disp_start = millis();                // time when USB dispensing starts (millisecs)
-        Serial.print("dispense,");          // and print to terminal in format:
-        Serial.print(vol_uL);               // dispense,[volume],[rate],[start_millis],[stop_millis]
-        Serial.print(",");
-        Serial.print(rate_uL_min);
-        Serial.print(",");
-        Serial.print(disp_start);
-        Serial.print(",");
     } else if (inChar == 'd'){
       vol_uL=Serial.parseInt();
       rate_uL_min=Serial.parseInt();
@@ -325,13 +317,13 @@ if (in_action){
       steps = steps_calc(vol_uL, 1, cal, 0);
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
-      disp_start = millis();                // time when USB dispensing starts (millisecs)
-        Serial.print("dispense,");          // and print to terminal in format:
-        Serial.print(vol_uL);               // dispense,[volume],[rate],[start_millis],[stop_millis]
+      dose_start = millis();                // time when USB dosing starts (millisecs)
+        Serial.print("dose,");          // and print to terminal in format:
+        Serial.print(vol_uL);               // dosing,[volume],[rate],[start_millis],[stop_millis]
         Serial.print(",");
         Serial.print(rate_uL_min);
         Serial.print(",");
-        Serial.print(disp_start);
+        Serial.print(dose_start);
         Serial.print(",");
     } else if (inChar == 'c'){
       usb_start=true;
@@ -353,8 +345,8 @@ if (in_action){
     } else if (inChar == 'd') {
       if (dose(steps, delay_us, step_counter)){
         usb_start = false;
-        disp_end = millis();
-          Serial.println(disp_end);
+        dose_end = millis();
+          Serial.println(dose_end);
       }
     } else if (inChar == 'c'){
       if (dose(CALIBR_STEPS, CALIBR_DELAY_US, step_counter)){
