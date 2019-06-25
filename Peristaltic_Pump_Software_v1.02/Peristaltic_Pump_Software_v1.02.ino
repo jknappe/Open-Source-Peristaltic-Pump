@@ -311,7 +311,11 @@ if (in_action){
       usb_start=true;
       pump_start = millis();                // time when USB pumping starts (millisecs)
         Serial.print("pump,");              // and print to terminal in format:
-        Serial.print(rate_uL_min);          // pump,[rate],[start_millis],[stop_millis]
+        Serial.print("NA");                 // pump,NA,[rate],[cal],[start_millis],[stop_millis]
+        Serial.print(",");
+        Serial.print(rate_uL_min);
+        Serial.print(",");
+        Serial.print(cal);
         Serial.print(",");
         Serial.print(pump_start);
         Serial.print(",");
@@ -327,9 +331,11 @@ if (in_action){
       usb_start=true;
       dose_start = millis();                // time when USB dosing starts (millisecs)
         Serial.print("dose,");              // and print to terminal in format:
-        Serial.print(vol_uL);               // dose,[volume],[rate],[start_millis],[stop_millis]
+        Serial.print(vol_uL);               // dose,[volume],[rate],[cal],[start_millis],[stop_millis]
         Serial.print(",");
         Serial.print(rate_uL_min);
+        Serial.print(",");
+        Serial.print(cal);
         Serial.print(",");
         Serial.print(dose_start);
         Serial.print(",");
