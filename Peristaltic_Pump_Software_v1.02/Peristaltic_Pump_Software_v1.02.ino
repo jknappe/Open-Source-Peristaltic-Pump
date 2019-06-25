@@ -48,7 +48,8 @@ long rate_uL_min =0;
 int cal=0;
 boolean usb_start=0;
 char inChar;
-
+long disp_start = 0;
+long disp_end = 0;
 
 //STATE ------------------------------------------------------------------------------------
 boolean in_menu=0;
@@ -316,6 +317,14 @@ if (in_action){
       steps = steps_calc(vol_uL, 1, cal, 0);
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
+      disp_start = millis();
+        Serial.print("dispense,");
+        Serial.print(vol_uL);
+        Serial.print(",");
+        Serial.print(rate_uL_min);
+        Serial.print(",");
+        Serial.print(disp_start);
+        Serial.print(",");
     } else if (inChar == 'c'){
       usb_start=true;
     } else if (inChar == 'w'){
@@ -336,6 +345,8 @@ if (in_action){
     } else if (inChar == 'd') {
       if (dose(steps, delay_us, step_counter)){
         usb_start = false;
+        disp_end = millis();
+          Serial.println(disp_end - disp_start);
       }
     } else if (inChar == 'c'){
       if (dose(CALIBR_STEPS, CALIBR_DELAY_US, step_counter)){
@@ -343,7 +354,7 @@ if (in_action){
       }
     }
   }
-  break;
+  break;  
 }
 
 /// MENU (no action) ////////////////////////////////////////////////////////////////////////////////
@@ -653,5 +664,3 @@ byte low, high;
   high=EEPROM.read(adr+1);
   return low + ((high << 8)&0xFF00);
 } //eepromReadInt
-
-
