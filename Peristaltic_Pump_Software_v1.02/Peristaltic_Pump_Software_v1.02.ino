@@ -50,6 +50,8 @@ boolean usb_start=0;
 char inChar;
 long dose_start = 0;    // stores time when USB dosing starts (millisecs)
 long dose_end = 0;      // stores time when USB dosing stops (millisecs)
+long pump_start = 0;    // stores time when USB pumping starts (millisecs)
+long pump_end = 0;      // stores time when USB pumping stops (millisecs)
 
 //STATE ------------------------------------------------------------------------------------
 boolean in_menu=0;
@@ -307,6 +309,12 @@ if (in_action){
       }
       delay_us = delay_us_calc(rate_uL_min, 1, cal, 0);
       usb_start=true;
+      pump_start = millis();                // time when USB pumping starts (millisecs)
+        Serial.print("pump,");              // and print to terminal in format:
+        Serial.print(rate_uL_min);          // pump,[rate],[start_millis],[stop_millis]
+        Serial.print(",");
+        Serial.print(pump_start);
+        Serial.print(",");
     } else if (inChar == 'd'){
       vol_uL=Serial.parseInt();
       rate_uL_min=Serial.parseInt();
@@ -319,7 +327,7 @@ if (in_action){
       usb_start=true;
       dose_start = millis();                // time when USB dosing starts (millisecs)
         Serial.print("dose,");              // and print to terminal in format:
-        Serial.print(vol_uL);               // dosing,[volume],[rate],[start_millis],[stop_millis]
+        Serial.print(vol_uL);               // dose,[volume],[rate],[start_millis],[stop_millis]
         Serial.print(",");
         Serial.print(rate_uL_min);
         Serial.print(",");
@@ -341,7 +349,9 @@ if (in_action){
   
   if (usb_start) {
     if(inChar == 'p'){
-      pump(delay_us);
+      pump(delay_us);      
+      pump_end = millis();
+        Serial.println(pump_end);
     } else if (inChar == 'd') {
       if (dose(steps, delay_us, step_counter)){
         usb_start = false;
